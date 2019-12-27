@@ -6,5 +6,5 @@ eureka:
       defaultZone: http://adrien:123123@localhost:9765/eureka/
 spring:
   application:
-    name: eureka_producer
+    name: eureka-producer
 

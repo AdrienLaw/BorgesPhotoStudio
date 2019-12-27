@@ -9,6 +9,7 @@
         <webroots />
         <sourceRoots>
           <root url="file://$MODULE_DIR$/src/main/java" />
+          <root url="file://$MODULE_DIR$/src/main/resources" />
         </sourceRoots>
       </configuration>
     </facet>
@@ -100,8 +101,8 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.netflix.ribbon:ribbon-transport:2.2.5" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: io.reactivex:rxnetty-contexts:0.4.9" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: io.reactivex:rxnetty-servo:0.4.9" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.netflix.hystrix:hystrix-core:1.5.12" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.hdrhistogram:HdrHistogram:2.1.9" level="project" />
+    <orderEntry type="library" name="Maven: com.netflix.hystrix:hystrix-core:1.5.12" level="project" />
+    <orderEntry type="library" name="Maven: org.hdrhistogram:HdrHistogram:2.1.9" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: io.reactivex:rxnetty:0.4.9" level="project" />
     <orderEntry type="library" name="Maven: com.netflix.ribbon:ribbon-core:2.2.5" level="project" />
     <orderEntry type="library" name="Maven: com.netflix.ribbon:ribbon-httpclient:2.2.5" level="project" />
@@ -132,5 +133,11 @@
     <orderEntry type="library" scope="TEST" name="Maven: com.vaadin.external.google:android-json:0.0.20131108.vaadin1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-core:4.3.11.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:4.3.11.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-feign:1.4.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-openfeign:1.4.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign:feign-core:9.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jvnet:animal-sniffer-annotation:1.0" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign:feign-slf4j:9.5.0" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign:feign-hystrix:9.5.0" level="project" />
   </component>
 </module>
