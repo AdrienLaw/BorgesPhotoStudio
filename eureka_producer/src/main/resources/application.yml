@@ -1,0 +1,10 @@
+server:
+  port: 9775
+eureka:
+  client:
+    service-url:
+      defaultZone: http://adrien:123123@localhost:9765/eureka/
+spring:
+  application:
+    name: eureka_producer
+
