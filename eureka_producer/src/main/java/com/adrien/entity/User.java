@@ -1,9 +1,10 @@
 package com.adrien.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 
-public class User {
+public class User implements Serializable {
     private String name;
     private Integer age;
     private BigDecimal salary;
