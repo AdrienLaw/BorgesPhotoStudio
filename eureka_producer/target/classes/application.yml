@@ -7,4 +7,13 @@ eureka:
 spring:
   application:
     name: eureka-producer
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/studio?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123123
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
 
+mybatis:
+  mapper-locations:
+  config-location: classpath:mybatis/mybatis-config.xml
