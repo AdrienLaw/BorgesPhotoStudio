@@ -1,4 +1,7 @@
 package com.adrien.mapper;
 
-public class UserDAO {
+import com.adrien.entity.User;
+
+public interface UserDAO {
+    User selectUserInfo(String id);
 }
