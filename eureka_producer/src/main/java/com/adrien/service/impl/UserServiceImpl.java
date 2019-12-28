@@ -17,9 +17,6 @@ public class UserServiceImpl implements IUserervice {
 
     private Logger LOGGER= LoggerFactory.getLogger(UserServiceImpl.class);
 
-
-
-
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -36,7 +33,6 @@ public class UserServiceImpl implements IUserervice {
 
         }
 */
-
         LOGGER.warn("=====================",id);
         User user = userDAO.selectUserInfo(id);
         LOGGER.info("=====================",id);

@@ -47,7 +47,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-
     <!--引入springcloud的euekea server依赖-->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
