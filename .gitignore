@@ -9,6 +9,9 @@
 # Log file
 *.log
 .idea
+eureka_consumer/target/*
+eureka_producer/target/*
+eureka_eureka/target/*
 # BlueJ files
 *.ctxt
 
