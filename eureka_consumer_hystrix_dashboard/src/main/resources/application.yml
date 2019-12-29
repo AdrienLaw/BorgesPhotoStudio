@@ -1,0 +1,12 @@
+server:
+  port: 9777
+eureka:
+  client:
+    service-url:
+      defaultZone: http://adrien:123123@localhost:9765/eureka/
+spring:
+  application:
+    name: eureka_consumer_dashboard
+feign:
+  hystrix:
+    enabled: true
