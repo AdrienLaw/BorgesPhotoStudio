@@ -1,0 +1,33 @@
+server:
+  port: 10080
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+    register-with-eureka: false
+    fetch-registry: false
+  server:
+    enableSelfPreservation: false
+  instance:
+    hostname: 127.0.0.1
+spring:
+  application:
+    name: eureka_config_server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/AdrienLaw/BorgesPhotoStudio/
+          search-paths: config-repo
+          username: adrienlaw@126.com
+          password: up842514938
+  profiles:
+    active: native
+security:
+  basic:
+    enabled: false
+  user:
+    name: adrien
+    password: 123123
+
+
