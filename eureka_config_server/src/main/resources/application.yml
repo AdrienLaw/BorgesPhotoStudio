@@ -18,7 +18,7 @@ spring:
       server:
         git:
           uri: https://github.com/AdrienLaw/BorgesPhotoStudio/
-          search-paths: config-repo
+          search-paths: eureka_config_server
           username: adrienlaw@126.com
           password: up842514938
   profiles:
