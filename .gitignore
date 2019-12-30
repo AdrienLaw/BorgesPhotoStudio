@@ -9,6 +9,7 @@
 # Log file
 *.log
 .idea
+./target/*
 eureka_consumer/target/*
 eureka_producer/target/*
 eureka_eureka/target/*
