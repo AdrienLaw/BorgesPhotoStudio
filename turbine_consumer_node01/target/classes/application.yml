@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: node01
+server:
+  port: 9001
+feign:
+  hystrix:
+    enabled: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://adrien:123123@localhost:9765/eureka/

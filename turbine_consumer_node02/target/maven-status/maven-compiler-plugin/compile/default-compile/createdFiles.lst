@@ -1,0 +1,5 @@
+com/adrien/feign/HelloRemote.class
+com/adrien/entity/User.class
+com/adrien/mapper/UserDAO.class
+com/adrien/hystrix/HelloRemoteHystrix.class
+com/adrien/controller/ConsumerController.class

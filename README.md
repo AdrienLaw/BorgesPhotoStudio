@@ -45,3 +45,25 @@ SpringCloud
 此时 重新加载
 ![](https://img2018.cnblogs.com/blog/1578595/201912/1578595-20191229172403560-1073034789.png)
 
+
+# turbine
+
+
+新建consumer——node01.node02
+
+启动后 访问 
+![](https://img2018.cnblogs.com/blog/1578595/201912/1578595-20191230214421967-1551433193.png)
+>http://localhost:9001/hello/jennifer
+>http://localhost:9002/hello/jennifer
+
+![](https://img2018.cnblogs.com/blog/1578595/201912/1578595-20191230213928104-168754613.png)
+
+之后
+>http://localhost:9778/turbine.stream
+
+![](https://img2018.cnblogs.com/blog/1578595/201912/1578595-20191230213531658-1725989145.png)
+
+进行图形化监控查看，输入：http://localhost:9778/hystrix，返回酷酷的小熊界面，输入： http://localhost:9778/turbine.stream，然后点击 Monitor Stream ,可以看到出现了俩个监控列表
+
+
+![](https://img2018.cnblogs.com/blog/1578595/201912/1578595-20191230213644372-844377687.png)
