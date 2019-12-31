@@ -66,7 +66,14 @@ SpringCloud
 进行图形化监控查看，输入：http://localhost:9778/hystrix，返回酷酷的小熊界面，输入： http://localhost:9778/turbine.stream，然后点击 Monitor Stream ,可以看到出现了俩个监控列表
 hello01,hello02分别是node01,node02的不同名字的服务
 
-## git config
+## git config server
 ![](https://img2018.cnblogs.com/blog/1578595/201912/1578595-20191230230410896-304042979.png)
 
 ![](https://img2018.cnblogs.com/blog/1578595/201912/1578595-20191230213644372-844377687.png)
+## git config client
+获取了dev的配置
+![](https://img2018.cnblogs.com/blog/1578595/201912/1578595-20191231122544329-1129771271.png)
+发现是冷配置，仓库变了，页面不变
+#### refresh
+改完之后
+![](https://img2018.cnblogs.com/blog/1578595/201912/1578595-20191231123120978-1194927043.png)
