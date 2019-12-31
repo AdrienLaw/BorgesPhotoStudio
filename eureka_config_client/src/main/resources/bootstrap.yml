@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+      name: adrien-config
+      profile: dev
+      uri: http://localhost:10080/
+      label: master
