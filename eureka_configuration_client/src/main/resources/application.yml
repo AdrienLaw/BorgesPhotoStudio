@@ -1,0 +1,9 @@
+server:
+  port: 10083
+spring:
+  application:
+    name: eureka_configuration_client
+management:
+  security:
+    enabled: false
+
