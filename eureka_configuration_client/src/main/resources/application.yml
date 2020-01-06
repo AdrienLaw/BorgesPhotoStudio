@@ -3,7 +3,19 @@ server:
 spring:
   application:
     name: eureka_configuration_client
+  cloud:
+    bus:
+      trace:
+        enabled: true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
 management:
   security:
     enabled: false
+
 
