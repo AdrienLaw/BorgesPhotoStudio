@@ -13,6 +13,11 @@ eureka_config_server/target/*
 eureka_consumer/target/*
 eureka_producer/target/*
 eureka_eureka/target/*
+eureka_configuration_server2/target/*
+eureka_configuration_server/target/*
+eureka_configuration_client/target/*
+eureka_configuration_client2/target/*
+eureka_configuration_client3/target/*
 # BlueJ files
 *.ctxt
 
