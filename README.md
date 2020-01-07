@@ -117,3 +117,17 @@ hello01,hello02分别是node01,node02的不同名字的服务
 
 
 ![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200107191530929-1489714326.png)
+
+### 其他
+
+#### 跟踪总线事件
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200107193800323-849218094.png)
+
+终端访问
+> curl -X POST http://localhost:10084/bus/refresh
+
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200107193926791-2027052483.png)
+
+
