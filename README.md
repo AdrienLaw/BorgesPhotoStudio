@@ -130,4 +130,17 @@ hello01,hello02分别是node01,node02的不同名字的服务
 
 ![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200107193926791-2027052483.png)
 
+## zuul 网关
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200107195904630-129262419.png)
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200107195757284-1498572540.png)
+
+.....
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200107200720519-1351361451.png)
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200107200634285-893970335.png)
+
+说明访问gateway-service-zuul-simple的请求自动转发到了spring-cloud-producer，并且将结果返回。
 

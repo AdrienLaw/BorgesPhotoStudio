@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: eureka_zuul
+server:
+  port: 18088
+zuul:
+  routes:
+    baidu:
+      path: /it/**
+      url: http://www.ityouknow.com/
+    hello:
+      path: /hello/*
+      url: http://localhost:9775/
