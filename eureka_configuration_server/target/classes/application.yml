@@ -11,6 +11,11 @@ spring:
           search-paths: config-repo
           username: adrienlaw@126.com
           password: up842514938
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 security:
   basic:
@@ -22,3 +27,7 @@ eureka:
   client:
     service-url:
       defaultZone: http://adrien:123123@localhost:9765/eureka
+
+management:
+  security:
+    enabled: false

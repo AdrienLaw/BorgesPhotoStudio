@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    config:
+      name: adrien-config
+      profile: dev
+      uri: http://localhost:10080/
+      label: master
+      discovery:
+        enabled: true
+        service-id: eureka-configuration-server
+eureka:
+  client:
+    service-url:
+      defaultZone: http://adrien:123123@localhost:9765/eureka
