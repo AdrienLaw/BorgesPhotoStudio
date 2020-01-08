@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: eureka-service-zuul
+server:
+  port: 18089
+
+#zuul:
+#  routes:
+#    producer:
+#      path: /producer/**
+#      serviceId: eureka-producer
+eureka:
+  client:
+    service-url:
+      defaultZone: http://adrien:123123@localhost:9765/eureka/

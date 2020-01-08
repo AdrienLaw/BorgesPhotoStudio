@@ -144,3 +144,29 @@ hello01,hello02分别是node01,node02的不同名字的服务
 
 说明访问gateway-service-zuul-simple的请求自动转发到了spring-cloud-producer，并且将结果返回。
 
+### 服务化
+
+复制 producer
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200108110532750-1326702030.png)
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200108110551815-8722625.png)
+
+说明通过zuul成功调用了producer服务并且做了均衡负载。
+
+### 网关的默认路由规则
+但是如果后端服务多达十几个的时候，每一个都这样配置也挺麻烦的，spring cloud zuul已经帮我们做了默认配置。默认情况下，Zuul会代理所有注册到Eureka Server的微服务，并且Zuul的路由规则如下：http://ZUUL_HOST:ZUUL_PORT/微服务在Eureka上的serviceId/**会被转发到serviceId对应的微服务。
+
+我们注销掉gateway_zuul_service项目中关于路由的配置：
+
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200108110406769-1300212364.png)
+
+
+访问：
+> http://localhost:18089/eureka-producer/hello?name=%E5%8C%97%E9%87%8E%E5%93%80
+
+与结果相同
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200108110532750-1326702030.png)
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200108110551815-8722625.png)
