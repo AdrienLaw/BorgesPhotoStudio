@@ -170,3 +170,62 @@ hello01,hello02分别是node01,node02的不同名字的服务
 
 ![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200108110532750-1326702030.png)
 ![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200108110551815-8722625.png)
+
+
+## Zuul的核心
+![](http://favorites.ren/assets/images/2018/springcloud/zuul-core.png)
+
+Zuul大部分功能都是通过过滤器来实现的，这些过滤器类型对应于请求的典型生命周期。
+
+PRE： 这种过滤器在请求被路由之前调用。我们可利用这种过滤器实现身份验证、在集群中选择请求的微服务、记录调试信息等。
+ROUTING：这种过滤器将请求路由到微服务。这种过滤器用于构建发送给微服务的请求，并使用Apache HttpClient或Netfilx Ribbon请求微服务。
+POST：这种过滤器在路由到微服务以后执行。这种过滤器可用来为响应添加标准的HTTP Header、收集统计信息和指标、将响应从微服务发送给客户端等。
+ERROR：在其他阶段发生错误时执行该过滤器。 除了默认的过滤器类型，Zuul还允许我们创建自定义的过滤器类型。例如，我们可以定制一种STATIC类型的过滤器，直接在Zuul中生成响应，而不将请求转发到后端的微服务。
+
+| 类型 |	顺序	| 过滤器 | 功能 |
+|-----|-----|-------|-----|
+|pre   |	-3 |	ServletDetectionFilter |	标记处理Servlet的类型|
+|pre |	-2 |	Servlet30WrapperFilter |	包装HttpServletRequest请求|
+|pre |	-1 |	FormBodyWrapperFilter |	包装请求体|
+|route |	1 |	DebugFilter |	标记调试标志|
+|route |	5 |	PreDecorationFilter |	处理请求上下文供后续使用|
+|route |	10 |	RibbonRoutingFilter |	serviceId请求转发|
+|route |	100 |	SimpleHostRoutingFilter |	url请求转发|
+|route |	500 |	SendForwardFilter |	forward请求转发|
+|post  |	0 |	SendErrorFilter |	处理有错误的请求响应|
+|post |	1000 |	SendResponseFilter |	处理正常的请求响应|
+
+### 自定义Filter示例
+
+添加Filter extends ZuulFilter ; 启动类加上 
+
+```
+@Bean
+   public TokenFilter tokenFilter() {
+   	return new TokenFilter();
+   }
+ ```
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200108125551450-1354530730.png)
+
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200108125653765-1038405680.png)
+
+
+
+# Spring Cloud 架构
+
+![](http://favorites.ren/assets/images/2017/springcloud/springcloud-question.png)
+
+![](http://favorites.ren/assets/images/2017/springcloud/spring-cloud-architecture.png)
+
+* 1、外部或者内部的非Spring Cloud项目都统一通过API网关（Zuul）来访问内部服务.
+* 2、网关接收到请求后，从注册中心（Eureka）获取可用服务
+* 3、由Ribbon进行均衡负载后，分发到后端的具体实例
+* 4、微服务之间通过Feign进行通信处理业务
+* 5、Hystrix负责处理服务超时熔断
+* 6、Turbine监控服务间的调用和熔断相关指标
+
+图中没有画出配置中心，配置中心管理各微服务不同环境
+
+
