@@ -1,0 +1,9 @@
+server:
+  port: 18090
+eureka:
+  client:
+    service-url:
+      defaultZone: http://adrien:123123@localhost:9765/eureka/
+spring:
+  application:
+    name: zipkin-server

@@ -18,6 +18,11 @@ spring:
     port: 6379
     database: 0
     timeout: 6000
+  zipkin:
+    base-url: http://localhost:18090
+  sleuth:
+    sampler:
+      percentage: 1.0
 mybatis:
   mapper-locations:
   config-location: classpath:mybatis/mybatis-config.xml

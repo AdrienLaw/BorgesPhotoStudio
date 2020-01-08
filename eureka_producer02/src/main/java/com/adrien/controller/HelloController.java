@@ -14,12 +14,12 @@ public class HelloController {
 
     @RequestMapping("/hello")
     public String index(@RequestParam String name) {
-        logger.info("request two name is "+name);
-        try{
-            Thread.sleep(1000000);
-        }catch ( Exception e){
-            logger.error(" hello two error",e);
-        }
+//        logger.info("request two name is "+name);
+//        try{
+//            Thread.sleep(1000000);
+//        }catch ( Exception e){
+//            logger.error(" hello two error",e);
+//        }
         return "Hello 巴拉巴拉  "+name;
     }
 }

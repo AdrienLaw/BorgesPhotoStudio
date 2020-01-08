@@ -1,20 +1,26 @@
 spring:
   application:
     name: eureka-service-zuul
+  zipkin:
+    base-url: http://localhost:18090
+  sleuth:
+    sampler:
+      percentage: 1.0
+
 server:
   port: 18089
 
-#zuul:
-#  routes:
-#    producer:
-#      path: /producer/**
-#      serviceId: eureka-producer
+
 eureka:
   client:
     service-url:
       defaultZone: http://adrien:123123@localhost:9765/eureka/
 zuul:
   retryable: true
+  routes:
+    producer:
+      path: /producer/**
+      serviceId: eureka-producer
 ribbon:
   MaxAutoRetries: 2 #对当前服务的重试次数
   MaxAutoRetriesNextServer: 0 #切换相同Server的次数

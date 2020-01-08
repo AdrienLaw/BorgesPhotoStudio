@@ -7,6 +7,12 @@ eureka:
 spring:
   application:
     name: eureka-producer
+  zipkin:
+    base-url: http://localhost:18090
+
+  sleuth:
+    sampler:
+      percentage: 1.0
 
 
 
