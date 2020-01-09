@@ -375,6 +375,155 @@ ServiceController
 说明我们已经成功的调用了 Consul 服务端提供的服务，并且实现了服务端的均衡负载功能。通过今天的实践我们发现 Consul 提供的服务发现易用、强大。
 
 
+## 服务网关 Spring Cloud GateWay 入门
+
+### Spring Cloud Gateway
+Spring Cloud Gateway 是 Spring Cloud 的一个全新项目，该项目是基于 Spring 5.0，Spring Boot 2.0 和 Project Reactor 等技术开发的网关，它旨在为微服务架构提供一种简单有效的统一的 API 路由管理方式。
+
+Spring Cloud Gateway 作为 Spring Cloud 生态系统中的网关，目标是替代 Netflix Zuul，其不仅提供统一的路由方式，并且基于 Filter 链的方式提供了网关基本的功能，例如：安全，监控/指标，和限流。
+
+相关概念:
+
+* Route（路由）：这是网关的基本构建块。它由一个 ID，一个目标 URI，一组断言和一组过滤器定义。如果断言为真，则路由匹配。
+* Predicate（断言）：这是一个 Java 8 的 Predicate。输入类型是一个 ServerWebExchange。我们可以使用它来匹配来自 HTTP 请求的任何内容，例如 headers 或参数。
+* Filter（过滤器）：这是org.springframework.cloud.gateway.filter.GatewayFilter的实例，我们可以使用它修改请求和响应。
+
+![](http://favorites.ren/assets/images/2018/springcloud/spring-cloud-gateway.png)
+
+客户端向 Spring Cloud Gateway 发出请求。如果 Gateway Handler Mapping 中找到与请求相匹配的路由，将其发送到 Gateway Web Handler。Handler 再通过指定的过滤器链来将请求发送到我们实际的服务执行业务逻辑，然后返回。 过滤器之间用虚线分开是因为过滤器可能会在发送代理请求之前（“pre”）或之后（“post”）执行业务逻辑。
+
+Spring Cloud Gateway 的特征：
+
+* 基于 Spring Framework 5，Project Reactor 和 Spring Boot 2.0
+* 动态路由
+* Predicates 和 Filters 作用于特定路由
+* 集成 Hystrix 断路器
+* 集成 Spring Cloud DiscoveryClient
+* 易于编写的 Predicates 和 Filters
+* 限流
+* 路径重写
+
+
+
+### 快速上手
+
+上面这段配置的意思是，配置了一个 id 为 neo_route 的路由规则，当访问地址 http://localhost:8080/spring-cloud时会自动转发到地址：http://www.ityouknow.com/spring-cloud。配置完成启动项目即可在浏览器访问进行测试，当我们访问地址http://localhost:8080/spring-cloud 时会展示页面展示如下：
+
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200109152534885-978193744.png)
+证明页面转发成功。
+
+======
+
+转发功能同样可以通过代码来实现，我们可以在启动类 GateWayApplication 中添加方法 customRouteLocator() 来定制转发规则。
+上面配置了一个 id 为 path_route 的路由，当访问地址http://localhost:8080/about时会自动转发到地址：http://www.ityouknow.com/about和上面的转发效果一样，只是这里转发的是以项目地址/about格式的请求地址。
+
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200109152847525-284790907.png)
+
+
+### 路由规则
+
+Spring Cloud Gateway 的功能很强大，我们仅仅通过 Predicates 的设计就可以看出来，前面我们只是使用了 predicates 进行了简单的条件匹配，其实 Spring Cloud Gataway 帮我们内置了很多 Predicates 功能。
+
+Spring Cloud Gateway 是通过 Spring WebFlux 的 HandlerMapping 做为底层支持来匹配到转发路由，Spring Cloud Gateway 内置了很多 Predicates 工厂，这些 Predicates 工厂通过不同的 HTTP 请求参数来匹配，多个 Predicates 工厂可以组合使用。
+
+#### Predicate 介绍
+Predicate 来源于 Java 8，是 Java 8 中引入的一个函数，Predicate 接受一个输入参数，返回一个布尔值结果。该接口包含多种默认方法来将 Predicate 组合成其他复杂的逻辑（比如：与，或，非）。可以用于接口请求参数校验、判断新老数据是否有变化需要进行更新操作。
+
+在 Spring Cloud Gateway 中 Spring 利用 Predicate 的特性实现了各种路由匹配规则，有通过 Header、请求参数等不同的条件来进行作为条件匹配到对应的路由。网上有一张图总结了 Spring Cloud 内置的几种 Predicate 的实现。
+
+![](http://favorites.ren/assets/images/2018/springcloud/spring-cloud-gateway3.png)
+说白了 Predicate 就是为了实现一组匹配规则，方便让请求过来找到对应的 Route 进行处理，接下来我们接下 Spring Cloud GateWay 内置几种 Predicate 的使用。
+
+#### 通过时间匹配
+
+ - -002 配置--
+##### Predicate
+
+Predicate 支持设置一个时间，在请求进行转发的时候，可以通过判断在这个时间之前或者之后进行转发。比如我们现在设置只有在2019年1月1日才会转发到我的网站，在这之前不进行转发，我就可以这样配置：
+
+Spring 是通过 ZonedDateTime 来对时间进行的对比，ZonedDateTime 是 Java 8 中日期时间功能里，用于表示带时区的日期与时间信息的类，ZonedDateTime 支持通过时区来设置时间，中国的时区是：Asia/Shanghai。
+
+After Route Predicate 是指在这个时间之后的请求都转发到目标地址。上面的示例是指，请求时间在 2018年1月20日6点6分6秒之后的所有请求都转发到地址http://ityouknow.com。+08:00是指时间和UTC时间相差八个小时，时间地区为Asia/Shanghai。
+
+添加完路由规则之后，访问地址http://localhost:8080会自动转发到http://ityouknow.com
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200109154700930-103056830.png)
+
+
+##### Before Route Predicate
+Before Route Predicate 刚好相反，在某个时间之前的请求的请求都进行转发。
+
+##### Between Route Predicate 来实现。
+除过在时间之前或者之后外，Gateway 还支持限制路由请求在某一个时间段范围内，可以使用 Between Route Predicate 来实现。
+
+#### 通过 Cookie 匹配
+Cookie Route Predicate 可以接收两个参数，一个是 Cookie name ,一个是正则表达式，路由规则会通过获取对应的 Cookie name 值和正则表达式去匹配，如果匹配上就会执行路由，如果没有匹配上则不执行。
+> curl http://localhost:8080 --cookie "ityouknow=kee.e"
+
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200109160522675-1589687221.png)
+
+则会返回页面代码，如果去掉 --cookie "ityouknow=kee.e"，后台汇报 404 错误。
+
+#### 通过 Header 属性匹配
+
+> curl http://localhost:8080  -H "X-Request-Id:666666" 
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200109160634985-2126469806.png)
+
+则返回页面代码证明匹配成功。将参数-H "X-Request-Id:666666"改为-H "X-Request-Id:neo"再次执行时返回404证明没有匹配。
+
+#### 通过 Host 匹配
+> curl http://localhost:8080  -H "Host: www.ityouknow.com" 
+>
+> curl http://localhost:8080  -H "Host: md.ityouknow.com" 
+经测试以上两种 host 均可匹配到 host_route 路由，去掉 host 参数则会报 404 错误。
+
+#### 通过请求方式匹配
+> curl http://localhost:8080
+
+> curl -X POST http://localhost:8080
+
+#### 通过请求路径匹配
+> curl http://localhost:8080/foo/1
+>
+> curl http://localhost:8080/foo/xx
+>
+> curl http://localhost:8080/boo/xx
+
+经过测试第一和第二条命令可以正常获取到页面返回值，最后一个命令报404，证明路由是通过指定路由来匹配。
+
+#### 通过请求参数匹配
+
+> curl localhost:8080?smile=x&id=2
+
+这样只要当请求中包含 keep 属性并且参数值是以 pu 开头的长度为三位的字符串才会进行匹配和路由。
+> curl localhost:8080?keep=pub
+
+#### 通过请求 ip 地址进行匹配
+> curl localhost:8080
+
+#### 组合使用
+
+## 服务网关 Spring Cloud GateWay 服务化和过滤器
+
+在介绍服务网关 zuul 的使用时，提供了 spring-cloud-eureka 、spring-cloud-producer 项目示例，本次演示我们将两个项目版本升级到 Finchley.SR2 后继续演示使用。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 =====================================================================
 
 # Spring Cloud 架构
