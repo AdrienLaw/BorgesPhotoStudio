@@ -511,16 +511,118 @@ Cookie Route Predicate 可以接收两个参数，一个是 Cookie name ,一个�
 
 在介绍服务网关 zuul 的使用时，提供了 spring-cloud-eureka 、spring-cloud-producer 项目示例，本次演示我们将两个项目版本升级到 Finchley.SR2 后继续演示使用。
 
+### 服务网关注册到注册中心
+新建 spring_cloud_gateway_producer spring_cloud_gateway_producer2 spring_cloud_eureka_gateway
 
 
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200110124139069-1997285854.png)
+
+### 测试
+
+> http://localhost:8888/SPRING-CLOUD-PRODUCER/hello
 
 
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200110124728124-843890104.png)
+
+## 基于 Filter(过滤器) 实现的高级功能
+
+Spring Cloud Gateway 的 Filter 的生命周期不像 Zuul 的那么丰富，它只有两个：“pre” 和 “post”。
+
+* PRE： 这种过滤器在请求被路由之前调用。我们可利用这种过滤器实现身份验证、在集群中选择请求的微服务、记录调试信息等。
+* POST：这种过滤器在路由到微服务以后执行。这种过滤器可用来为响应添加标准的 HTTP Header、收集统计信息和指标、将响应从微服务发送给客户端等。
+Spring Cloud Gateway 的 Filter 分为两种：GatewayFilter 与 GlobalFilter。GlobalFilter 会应用到所有的路由上，而 GatewayFilter 将应用到单个路由或者一个分组的路由上。
+
+Spring Cloud Gateway 内置了9种 GlobalFilter，比如 Netty Routing Filter、LoadBalancerClient Filter、Websocket Routing Filter 等，根据名字即可猜测出这些 Filter 的作者，具体大家可以参考官网内容：Global Filters
+
+利用 GatewayFilter 可以修改请求的 Http 的请求或者响应，或者根据请求或者响应做一些特殊的限制。 更多时候我们会利用 GatewayFilter 做一些具体的路由配置，下面我们做一些简单的介绍。
+
+再次修改配置文件
+
+> http://localhost:8888/foo
+>
+> http://localhost:9000/foo
+
+这里的 routes 手动指定了服务的转发地址，设置所有的 GET 方法都会自动添加foo=bar，http://localhost:9000 是 spring-cloud-producer 项目，我们在此项目中添加一个 foo() 方法，用来接收转发中添加的参数 foo。
+
+```java
+    @RequestMapping("/foo")
+    public String foo(String foo) {
+        return "hello "+foo+"!";
+    }
+
+```
+修改完成后重启 cloud-gateway-eureka、spring-cloud-producer 项目。访问地址http://localhost:9000/foo页面返回：hello null!，说明并没有接受到参数 foo；通过网关来调用此服务，浏览器访问地址http://localhost:8888/foo页面返回：hello bar!，说明成功接收到参数 foo 参数的值 bar ,证明网关在转发的过程中已经通过 filter 添加了设置的参数和值。
 
 
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200110125855777-1232704553.png)
+
+### 服务化路由转发
+
+上面我们使用 uri 指定了一个服务转发地址，单个服务这样使用问题不大，但是我们在注册中心往往会使用多个服务来共同支撑整个服务的使用，这个时候我们就期望可以将 Filter 作用到每个应用的实例上，spring cloud gateway 工了这样的功能，只需要简单配置即可。
+
+为了测试两个服务提供者是否都被调用，我们在 spring-cloud-producer-1 项目中也同样添加 foo() 方法。
+
+```java
+
+@RequestMapping("/foo")
+public String foo(String foo) {
+    return "hello "+foo+"!!";
+}
+```
+为了和 spring-cloud-producer 中 foo() 方法有所区别，这里使用了两个感叹号。同时将 cloud-gateway-eureka 项目配置文件中的 uri 内容修改如下：
+
+#格式为：lb://应用注册服务名
+uri: lb://spring-cloud-producer
+修改完之后，重新启动项目 cloud-gateway-eureka、spring-cloud-producer-1，浏览器访问地址:http://localhost:8888/foo页面交替出现：
+```bash
+
+hello bar!
+hello bar!!
+```
+证明请求依据均匀转发到后端服务，并且后端服务均接收到了 filter 增加的参数 foo 值。
+
+这里其实默认使用了全局过滤器 LoadBalancerClient ，当路由配置中 uri 所用的协议为 lb 时（以uri: lb://spring-cloud-producer为例），gateway 将使用 LoadBalancerClient 把 spring-cloud-producer 通过 eureka 解析为实际的主机和端口，并进行负载均衡。
+
+下篇再给大家介绍集中比较常用的 Filter 功能。
 
 
+## 服务网关 Spring Cloud GateWay 熔断、限流、重试
+
+### 修改请求路径的过滤器
+
+StripPrefix Filter
+
+StripPrefix Filter 是一个请求路径截取的功能，我们可以利用这个功能来做特殊业务的转发。
+
+根据上面配置的例子表示，当请求路径匹配到/name/**会将包含name和后边的字符串接去掉转发， StripPrefix=2就代表截取路径的个数，这样配置后当请求/name/bar/foo后端匹配到的请求路径就会变成http://nameservice/foo。
+
+我们还是在 cloud-gateway-eureka 项目中进行测试，修改 application.yml 如下：
+
+```java
+
+    spring:
+      cloud:
+         routes:
+         - id: nameRoot
+           uri: lb://spring-cloud-producer
+           predicates:
+           - Path=/name/**
+           filters:
+           - StripPrefix=2
+```
+配置完后重启 cloud-gateway-eureka 项目，访问地址：http://localhost:8888/name/foo/hello页面会交替显示：
+
+hello world!
+hello world smile!
+和直接访问地址 http://localhost:8888/hello展示的效果一致，说明请求路径中的 name/foo/ 已经被截取。
+
+![](https://img2018.cnblogs.com/blog/1578595/202001/1578595-20200110162955873-1081238278.png)
 
 
+和直接访问地址 http://localhost:8888/hello展示的效果一致，说明请求路径中的 name/foo/ 已经被截取。（但是我没玩成功）
+
+### 限速路由器
+限速在高并发场景中比较常用的手段之一，可以有效的保障服务的整体稳定性，Spring Cloud Gateway 提供了基于 Redis 的限流方案。所以我们首先需要添加对应的依赖包spring-boot-starter-data-redis-reactive
 
 
 
