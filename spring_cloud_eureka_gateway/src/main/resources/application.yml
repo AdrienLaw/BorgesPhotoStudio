@@ -83,20 +83,40 @@ eureka:
 
 
 # 熔断路由器
+#spring:
+#  application:
+#    name: cloud-gateway-eureka
+#  cloud:
+#    gateway:
+#      routes:
+#      - id: hystrix_route
+#        uri: lb://spring-cloud-producer
+#        predicates:
+#        - Path=/consumingserviceendpoint
+#        filters:
+#        - name: Hystrix
+#          args:
+#            name: fallbackcmd
+#            fallbackUri: forward:/incaseoffailureusethis
+#server:
+#  port: 8888
+
+
+# 重试路由器
 spring:
   application:
     name: cloud-gateway-eureka
   cloud:
     gateway:
       routes:
-      - id: hystrix_route
+      - id: retry_test
         uri: lb://spring-cloud-producer
         predicates:
-        - Path=/consumingserviceendpoint
+        - Path=/retry
         filters:
-        - name: Hystrix
+        - name: Retry
           args:
-            name: fallbackcmd
-            fallbackUri: forward:/incaseoffailureusethis
+            retries: 3
+            statuses: BAD_GATEWAY
 server:
   port: 8888

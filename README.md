@@ -629,7 +629,17 @@ hello world smile!
 
 fallbackUri: forward:/incaseoffailureusethis配置了 fallback 时要会调的路径，当调用 Hystrix 的 fallback 被调用时，请求将转发到/incaseoffailureuset这个 URI。
 
+### 重试路由器
 
+RetryGatewayFilter 是 Spring Cloud Gateway 对请求重试提供的一个 GatewayFilter Factory
+
+Retry GatewayFilter 通过这四个参数来控制重试机制： retries, statuses, methods, 和 series。
+
+retries：重试次数，默认值是 3 次
+statuses：HTTP 的状态返回码，取值请参考：org.springframework.http.HttpStatus
+methods：指定哪些方法的请求需要进行重试逻辑，默认值是 GET 方法，取值参考：org.springframework.http.HttpMethod
+series：一些列的状态码配置，取值参考：org.springframework.http.HttpStatus.Series。符合的某段状态码才会进行重试逻辑，默认值是 SERVER_ERROR，值是 5，也就是 5XX(5 开头的状态码)，共有5 个值。
+以上便是项目中常用的一些网关操作，更多关于 Spring Cloud GateWay 的使用请参考官网。
 
 
 
