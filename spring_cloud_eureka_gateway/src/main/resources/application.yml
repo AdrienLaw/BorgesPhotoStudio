@@ -54,29 +54,49 @@ eureka:
 #        filters:
 #        - StripPrefix=2
 
-# Redis 限速路由器
+## Redis 限速路由器
+#spring:
+#  application:
+#    name: cloud-gateway-eureka
+#  redis:
+#    host: localhost
+#    password:
+#    port: 6379
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#      routes:
+#      - id: requestratelimiter_route
+#        uri: http://example.org
+#        filters:
+#        - name: RequestRateLimiter
+#          args:
+#            redis-rate-limiter.replenishRate: 10
+#            redis-rate-limiter.burstCapacity: 20
+#            key-resolver: "#{@userKeyResolver}"
+#        predicates:
+#        - Method=GET
+#server:
+#  port: 8888
+
+
+# 熔断路由器
 spring:
   application:
     name: cloud-gateway-eureka
-  redis:
-    host: localhost
-    password:
-    port: 6379
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
       routes:
-      - id: requestratelimiter_route
-        uri: http://example.org
-        filters:
-        - name: RequestRateLimiter
-          args:
-            redis-rate-limiter.replenishRate: 10
-            redis-rate-limiter.burstCapacity: 20
-            key-resolver: "#{@userKeyResolver}"
+      - id: hystrix_route
+        uri: lb://spring-cloud-producer
         predicates:
-        - Method=GET
+        - Path=/consumingserviceendpoint
+        filters:
+        - name: Hystrix
+          args:
+            name: fallbackcmd
+            fallbackUri: forward:/incaseoffailureusethis
 server:
   port: 8888
