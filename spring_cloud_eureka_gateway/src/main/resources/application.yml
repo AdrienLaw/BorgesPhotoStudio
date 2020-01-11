@@ -54,7 +54,7 @@ eureka:
 #        filters:
 #        - StripPrefix=2
 
-# Redis
+# Redis 限速路由器
 spring:
   application:
     name: cloud-gateway-eureka
